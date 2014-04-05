@@ -36,3 +36,7 @@ module Truck
     contexts.each_value.select(&:booted?).each(&block)
   end
 end
+
+# Load this last so that when truck itself has unresolvable constants, we throw
+# up vanilla ruby NameErrors.
+require_relative "truck/core_ext"
