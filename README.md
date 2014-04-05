@@ -1,9 +1,11 @@
 # Truck
 
-Truck is an alternative autoloader that doesn't pollute the global namespace. Specifically, it does not load constants into `Object`; rather, it loads them into *Contexts* that you define. This has two main advantages:
+Truck is an alternative autoloader that doesn't pollute the global namespace. Specifically, it does not load constants into `Object`; rather, it loads them into *Contexts* that you define. This has three main advantages:
 
 1. `reload!` is very fast; `Object.send(:remove_const, :MyContext)` does the trick
 2. You can have multiple autoloaders running in parallel contexts
+3. Eliminates the need for `fork()` based preloaders like `zeus` and `spring`. Instead, load your gems, define your contexts, and safely `reload!` them between each test run.
+
 
 ## Installation
 
