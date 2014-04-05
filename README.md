@@ -23,11 +23,15 @@ Or install it yourself as:
 
 Unlike ActiveSupport's autoloader, truck requires a bit of setup for each context. An example:
 
-    Truck.define_context :MyContext, root: "/path/to/context/root"
+```ruby
+Truck.define_context :MyContext, root: "/path/to/context/root"
+```
 
 Also, after defining all your contexts, you'll want to boot everyone up:
 
-    Truck.boot!
+```ruby
+Truck.boot!
+```
 
 You'll want to define all your contexts, then fork/spawn threads, then have every sub process invoke `Truck.boot!` separately.
 
@@ -53,22 +57,28 @@ end
 
 `Foo` can reference `Bar` without an explicit require. So how does the world outside of `MyContext` reference objects?
 
-    MyContext.resolve_const("Bar")
+```ruby
+MyContext.resolve_const("Bar")
+```
 
 This works with namespaced constant names, too:
 
-    MyContext.resolve_const("Foo::Bar::Baz")
+```ruby
+MyContext.resolve_const("Foo::Bar::Baz")
+```
 
 `MyContext` has some other interesting methods on it:
 
-    # Wipe the whole context and reload it (also aliased as reload!)
-    MyContext.reset!
+```ruby
+# Wipe the whole context and reload it (also aliased as reload!)
+MyContext.reset!
 
-    # Kill the context
-    MyContext.shutdown!
+# Kill the context
+MyContext.shutdown!
 
-    # Eagerly load the entire context into memory (good for production)
-    MyContext.eager_load!
+# Eagerly load the entire context into memory (good for production)
+MyContext.eager_load!
+```
 
 These methods are also of course on `Truck` as well, and invoke the same operations on every context.
 
