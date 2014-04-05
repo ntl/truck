@@ -19,23 +19,20 @@ module Truck
   end
 
   def reset!
-    shutdown_all_contexts!
-    boot!
+    each_booted_context &:reset!
   end
   alias_method :reload!, :reset!
 
   def shutdown!
-    shutdown_all_contexts!
-    contexts.clear
+    each_booted_context &:shutdown!
   end
 
   Error = Class.new StandardError
 
   private
 
-  def shutdown_all_contexts!
-    contexts.each_value do |context|
-      context.shutdown! if context.booted?
-    end
+  def each_booted_context(&block)
+    return to_enum(:each_booted_context) unless block_given?
+    contexts.each_value.select(&:booted?).each(&block)
   end
 end

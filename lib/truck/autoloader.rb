@@ -15,7 +15,7 @@ module Truck
       @dir_paths = each_possible_const(const_name).reduce [] do |new_paths, possible_const|
         resolved_const = context.resolve_const possible_const
         throw :const, resolved_const if resolved_const
-        new_paths << possible_const if dir?(possible_const)
+        new_paths << possible_const if possible_namespace?(possible_const)
         new_paths
       end
       raise_name_error!(const_name) if dir_paths.empty?
@@ -29,8 +29,8 @@ module Truck
       end
     end
 
-    def dir?(possible_const)
-      context.possible_implicit_namespace? possible_const.to_snake_case
+    def possible_namespace?(possible_const)
+      context.root.join(possible_const.to_snake_case).directory?
     end
 
     def constify(*nibbles)

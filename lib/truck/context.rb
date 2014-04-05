@@ -16,10 +16,6 @@ module Truck
       end
     end
 
-    def build_mod
-      Module.new
-    end
-
     def boot!
       parent.const_set name, mod
     end
@@ -43,15 +39,12 @@ module Truck
       Truck.contexts.fetch(@parent.to_sym).mod
     end
 
-    def reload!
+    def reset!
       shutdown!
       @mod = build_mod
       boot!
     end
-
-    def possible_implicit_namespace?(path)
-      root.join(path).directory?
-    end
+    alias_method :reload!, :reset!
 
     def resolve_const(expanded_const)
       build_const_resolver(expanded_const).resolve
@@ -68,6 +61,10 @@ module Truck
         context: self,
         expanded_const: String(expanded_const).dup.freeze,
       )
+    end
+
+    def build_mod
+      Module.new
     end
 
   end
