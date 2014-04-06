@@ -1,12 +1,13 @@
 module Truck
   class Context
-    attr :mod, :name, :root
+    attr :autoload_paths, :mod, :name, :root
 
-    def initialize(name, parent: nil, root:)
+    def initialize(name, parent: nil, root:, autoload_paths: ['.'])
       @mod    = build_mod
       @name   = name
       @root   = Pathname(root) if root
       @parent = parent
+      @autoload_paths = expand_autoload_paths autoload_paths
     end
 
     class << self
@@ -65,6 +66,10 @@ module Truck
 
     def build_mod
       Module.new
+    end
+
+    def expand_autoload_paths(paths)
+      paths.map do |path| root.join path; end
     end
 
   end

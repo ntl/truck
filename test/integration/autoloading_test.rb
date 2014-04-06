@@ -36,4 +36,8 @@ class AutoloadingTest < Minitest::Test
     end
     assert_equal "uninitialized constant Abracadabra", exception.message
   end
+
+  def test_explicit_autoload_paths
+    assert_equal 'hello from Bar::Z', MultipleAutoloadPaths::A.references_z
+  end
 end

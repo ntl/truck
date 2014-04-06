@@ -55,6 +55,10 @@ module A
     C::CA::CAA::CAAA.message
   end
 
+  def self.references_z
+    Z.message
+  end
+
   module AB
     def self.message
       "hello from A::AB"
@@ -149,6 +153,14 @@ end
 module B
   def self.message
     "hello from Bar::B"
+  end
+end
+      FILE
+
+      File.write "/bar/z.rb", <<-FILE
+module Z
+  def self.message
+    "hello from Bar::Z"
   end
 end
       FILE

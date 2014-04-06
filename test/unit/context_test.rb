@@ -76,6 +76,23 @@ class ContextTest < Minitest::Test
     refute @context.booted?
   end
 
+  def test_autoload_path_defaults_to_root
+    assert_equal %w(/foo), Truck.contexts.fetch(:Foo).autoload_paths.map(&:to_s)
+  end
+
+  def test_explicit_autoload_paths
+    context = Truck.define_context :MultipleAutoloadPaths, root: "/", autoload_paths: %w(foo bar)
+    context.boot!
+
+    mod = context.resolve_const('A')
+    assert_kind_of Module, mod
+    assert_equal 'MultipleAutoloadPaths::A', mod.name
+
+    mod = context.resolve_const('B::BA')
+    assert_kind_of Module, mod
+    assert_equal 'MultipleAutoloadPaths::B::BA', mod.name
+  end
+
   private
 
   def assert_autoloaded_module(expected_name, mod)

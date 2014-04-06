@@ -37,7 +37,9 @@ Truck.boot!
 
 You'll want to define all your contexts, then fork/spawn threads, then have every sub process invoke `Truck.boot!` separately.
 
-There is no notion of autoload paths; if you want multiple autoload paths, you'd define multiple contexts. In this example, a top level module called `MyContext` would get defined. Suppose you had a class called `Foo` living in `/path/to/context/root/foo.rb`:
+### Referencing constants
+
+Suppose you had a class called `Foo` living in `/path/to/context/root/foo.rb`:
 
 ```ruby
 # /path/to/context/root/foo.rb
@@ -69,6 +71,8 @@ This works with namespaced constant names, too:
 MyContext.resolve_const("Foo::Bar::Baz")
 ```
 
+### Other
+
 `MyContext` has some other interesting methods on it:
 
 ```ruby
@@ -83,6 +87,22 @@ MyContext.eager_load!
 ```
 
 These methods are also of course on `Truck` as well, and invoke the same operations on every context.
+
+### Autoload Paths
+
+By default, the `root` you pass to the `Context` is your autoload paths. You can alternatively supply a list of autoload paths relative to `root`:
+
+```ruby
+Truck.define_context(
+  :MyContext,
+  root: "/path/to/context/root",
+  autoload_paths: %w(app/models app/controllers lib)
+)
+```
+
+### Compatibiilty
+
+Currently, truck has been tested against 2.1.1. It uses refinements internally. The plan is to support recent rubinius releases as well.
 
 ## Contributing
 
