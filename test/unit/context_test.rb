@@ -63,13 +63,6 @@ class ContextTest < Minitest::Test
     assert Foo.const_defined?(:A)
   end
 
-  def test_reload_drops_constant_references
-    @context.eager_load!
-    assert Foo.const_defined?(:A)
-    @context.reload!
-    refute Foo.const_defined?(:A)
-  end
-
   def test_shutdown_removes_const
     assert @context.booted?
     @context.shutdown!

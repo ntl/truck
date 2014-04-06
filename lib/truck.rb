@@ -15,16 +15,17 @@ module Truck
   end
 
   def boot!
-    contexts.each_value(&:boot!)
+    contexts.each_value &:boot!
   end
 
   def reset!
-    each_booted_context &:reset!
+    shutdown!
+    boot!
   end
   alias_method :reload!, :reset!
 
   def shutdown!
-    each_booted_context &:shutdown!
+    each_booted_context.to_a.reverse.each &:shutdown!
   end
 
   Error = Class.new StandardError

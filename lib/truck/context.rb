@@ -1,12 +1,11 @@
 module Truck
   class Context
-    attr :autoload_paths, :mod, :name, :root
+    attr :autoload_paths, :name, :root
 
     def initialize(name, parent: nil, root:, autoload_paths: ['.'])
       @name   = name
       @root   = Pathname(root)
       @parent = parent
-      @mod    = build_mod
       @autoload_paths = expand_autoload_paths autoload_paths
     end
 
@@ -18,11 +17,16 @@ module Truck
     end
 
     def boot!
-      parent.const_set name, mod
+      parent.const_set name, build_mod
+    end
+
+    def mod
+      return nil unless parent and parent.const_defined? name
+      parent.const_get name 
     end
 
     def booted?
-      parent.const_defined? name
+      mod ? true : false
     end
 
     def eager_load!
@@ -40,19 +44,12 @@ module Truck
       Truck.contexts.fetch(@parent.to_sym).mod
     end
 
-    def reset!
-      shutdown!
-      @mod = build_mod
-      boot!
-    end
-    alias_method :reload!, :reset!
-
     def resolve_const(expanded_const)
       build_const_resolver(expanded_const).resolve
     end
 
     def shutdown!
-      parent.send(:remove_const, name)
+      parent.send :remove_const, name
     end
 
     private
