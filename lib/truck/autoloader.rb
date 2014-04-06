@@ -46,7 +46,7 @@ module Truck
     # given "Foo::Bar::Baz", return ["Foo::Bar::Baz", "Foo::Bar", etc.]
     def fetch_context_and_base_nibbles
       each_base_nibble.to_a.reverse.reduce [] do |ary, (mod, const)|
-        owner = Truck.contexts.each_value.detect { |c| c.mod == mod }
+        owner = Truck.contexts.each_value.detect { |c| c.context_for? mod }
         return [owner, ary] if owner
         ary.map! do |e| e.insert 0, '::'; e.insert 0, const; end
         ary << const

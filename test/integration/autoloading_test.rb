@@ -40,4 +40,8 @@ class AutoloadingTest < Minitest::Test
   def test_explicit_autoload_paths
     assert_equal 'hello from Bar::Z', MultipleAutoloadPaths::A.references_z
   end
+
+  def test_reference_constants_in_included_class
+    assert_equal 'hello from B::BA', MyApp::IncludesFoo.message
+  end
 end

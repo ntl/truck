@@ -25,6 +25,10 @@ module Truck
       parent.const_get name 
     end
 
+    def context_for?(other_mod)
+      mod == other_mod or other_mod.included_modules.include? mod
+    end
+
     def booted?
       mod ? true : false
     end

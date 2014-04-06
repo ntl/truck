@@ -179,6 +179,16 @@ module A
 end
       FILE
 
+      File.write "/my_app/lib/includes_foo.rb", <<-FILE
+class IncludesFoo
+  include Foo
+
+  def self.message
+    D.new.references_b_ba
+  end
+end
+      FILE
+
       Dir.mkdir "/my_app/lib/b"
       File.write "/my_app/lib/b/ba.rb", <<-FILE
 module B

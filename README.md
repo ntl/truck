@@ -100,6 +100,22 @@ Truck.define_context(
 )
 ```
 
+### Testing
+
+You can mix in your contexts into your tests, e.g.:
+
+```ruby
+Truck.define_context :MyContext, root: "/path/to/root"
+
+class MyTest < Minitest::Test
+  include MyContext
+
+  def test_anything
+    assert MyClass # MyClass is autoloaded within MyContext
+  end
+end
+```
+
 ### Compatibiilty
 
 Currently, truck has been tested against 2.1.1. It uses refinements internally. The plan is to support recent rubinius releases as well.
