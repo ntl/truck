@@ -3,10 +3,10 @@ module Truck
     attr :autoload_paths, :mod, :name, :root
 
     def initialize(name, parent: nil, root:, autoload_paths: ['.'])
-      @mod    = build_mod
       @name   = name
-      @root   = Pathname(root) if root
+      @root   = Pathname(root)
       @parent = parent
+      @mod    = build_mod
       @autoload_paths = expand_autoload_paths autoload_paths
     end
 
@@ -65,7 +65,11 @@ module Truck
     end
 
     def build_mod
-      Module.new
+      mod = Module.new
+      mod.singleton_class.class_exec root do |__root__|
+        define_method :root do __root__ ; end
+      end
+      mod
     end
 
     def expand_autoload_paths(paths)

@@ -92,6 +92,10 @@ class ContextTest < Minitest::Test
     assert_kind_of Module, mod
     assert_equal 'MultipleAutoloadPaths::B::BA', mod.name
   end
+  
+  def test_root_defined_on_mod
+    assert_equal Pathname("/foo"), Foo.root
+  end
 
   private
 
