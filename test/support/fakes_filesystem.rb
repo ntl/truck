@@ -199,6 +199,16 @@ module B
   end
 end
       FILE
+
+      File.write "/ext.rb", <<-FILE
+class MyExtClass
+  include Foo
+
+  def message
+    A.message
+  end
+end
+      FILE
     end
   end
 end

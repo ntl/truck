@@ -44,4 +44,12 @@ class AutoloadingTest < Minitest::Test
   def test_reference_constants_in_included_class
     assert_equal 'hello from B::BA', MyApp::IncludesFoo.message
   end
+
+  def test_reference_constants_in_external_class_that_includes_module
+    TOPLEVEL_BINDING.eval File.read "/ext.rb"
+
+    assert_equal 'hello from A', MyExtClass.new.message
+  ensure
+    Object.send :remove_const, :MyExtClass
+  end
 end
