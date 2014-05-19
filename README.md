@@ -52,7 +52,7 @@ end
 
 ```ruby
 # /path/to/context/root/bar.rb
-class Foo
+class Bar
   def self.hello_world
     "hello, world!"
   end
@@ -69,6 +69,12 @@ This works with namespaced constant names, too:
 
 ```ruby
 MyContext.resolve_const("Foo::Bar::Baz")
+```
+
+You can also directly reference them through their toplevel namespace:
+
+```ruby
+MyContext::Foo::Bar::Baz
 ```
 
 ### Other
