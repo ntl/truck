@@ -2,10 +2,11 @@ module Truck
   using Truck::StringInflections
 
   class Autoloader
-    attr :base_nibbles, :context, :from, :dir_paths
+    attr :base_nibbles, :context, :file, :from, :dir_paths
 
-    def initialize(from)
+    def initialize(from, file)
       @from = from
+      @file = file
       @context, @base_nibbles = fetch_context_and_base_nibbles
       @dir_paths = [nil]
     end
@@ -13,7 +14,7 @@ module Truck
     def <<(const_name)
       raise_name_error!(const_name) unless context
       @dir_paths = each_possible_const(const_name).reduce [] do |new_paths, possible_const|
-        resolved_const = context.resolve_const possible_const
+        resolved_const = context.resolve_const possible_const, skip: file
         throw :const, resolved_const if resolved_const
         new_paths << possible_const if possible_namespace?(possible_const)
         new_paths
@@ -94,8 +95,8 @@ module Truck
         set_current_autoloader(to: nil) if found_const or name_error
       end
 
-      def handle!(const_name, from:)
-        autoloader = current_autoloader || new(from)
+      def handle!(const_name, current_file: nil, from:)
+        autoloader = current_autoloader || new(from, current_file)
         autoloader << String(const_name)
         set_current_autoloader to: autoloader
       end

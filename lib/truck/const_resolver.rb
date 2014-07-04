@@ -3,11 +3,12 @@ module Truck
 
   class Context
     class ConstResolver
-      attr :current_path, :context, :expanded_const
+      attr :current_path, :context, :expanded_const, :skip_files
 
-      def initialize(context:, expanded_const:)
+      def initialize(context:, expanded_const:, skip_files:)
         @context        = context
         @expanded_const = expanded_const
+        @skip_files     = skip_files
       end
 
       def resolve
@@ -26,6 +27,7 @@ module Truck
         each_autoload_path do
           base_path = current_path.join expanded_const.to_snake_case
           each_rb_file_from_base_path base_path do |rb_file|
+            next if skip_files.include? rb_file.to_s
             yield rb_file if File.exist?(rb_file)
           end
         end

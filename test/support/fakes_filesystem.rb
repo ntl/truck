@@ -209,6 +209,24 @@ class MyExtClass
   end
 end
       FILE
+
+      Dir.mkdir "/extend"
+      Dir.mkdir "/extend/lib"
+      Dir.mkdir "/extend/app"
+
+      File.write "/extend/app/my_model.rb", <<-FILE
+module MyModel
+  extend MyMixin
+end
+      FILE
+
+      File.write "/extend/lib/my_mixin.rb", <<-FILE
+module MyMixin
+  def message
+    'hello from MyMixin'
+  end
+end
+      FILE
     end
   end
 end

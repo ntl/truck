@@ -10,6 +10,8 @@ module Truck
   attr :contexts
   @contexts = {}
 
+  attr_accessor :debug_mode
+
   def define_context(name, **params)
     contexts[name] = Context.new(name, **params)
   end

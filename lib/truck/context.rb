@@ -40,7 +40,8 @@ module Truck
     end
 
     def load_file(rb_file)
-      mod.module_eval File.read(rb_file), rb_file.to_s
+      ruby_code = File.read rb_file
+      mod.module_eval ruby_code, rb_file.to_s
     end
 
     def parent
@@ -48,8 +49,8 @@ module Truck
       Truck.contexts.fetch(@parent.to_sym).mod
     end
 
-    def resolve_const(expanded_const)
-      build_const_resolver(expanded_const).resolve
+    def resolve_const(expanded_const, skip: nil)
+      build_const_resolver(expanded_const, Array[skip]).resolve
     end
 
     def shutdown!
@@ -58,10 +59,11 @@ module Truck
 
     private
 
-    def build_const_resolver(expanded_const)
+    def build_const_resolver(expanded_const, skip_files)
       ConstResolver.new(
         context: self,
         expanded_const: String(expanded_const).dup.freeze,
+        skip_files: skip_files,
       )
     end
 
