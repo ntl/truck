@@ -13,10 +13,10 @@ module Truck
         # Convert FOOBar => FooBar
         str.gsub! %r{[[:upper:]]{2,}} do |uppercase|
           bit = uppercase[0]
-          bit << uppercase[1...-1].downcase
-          bit << uppercase[-1]
+          bit << uppercase[1..-1].downcase
           bit
         end
+        # Convert FooBar => foo_bar
         str.gsub! %r{[[:lower:]][[:upper:]]+[[:lower:]]} do |camel|
           bit = camel[0]
           bit << '_'
