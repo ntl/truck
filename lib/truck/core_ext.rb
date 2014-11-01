@@ -1,6 +1,6 @@
 class Module
   def const_missing(const)
-    offending_file = caller_locations.fetch(0).path
+    offending_file = caller[0]
     $stderr.puts "Module#const_missing: const=#{const.inspect}, self=#{inspect}, file=#{offending_file}" if Truck.debug_mode
     catch :const do
       Truck::Autoloader.handle const, self, offending_file
