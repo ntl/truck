@@ -49,7 +49,7 @@ module Truck
       Truck.contexts.fetch(@parent.to_sym).mod
     end
 
-    def resolve_const(expanded_const, skip: nil)
+    def resolve_const(expanded_const, skip = nil)
       build_const_resolver(expanded_const, Array[skip]).resolve
     end
 

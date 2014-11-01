@@ -12,7 +12,7 @@ module Truck
     def <<(const_name)
       raise_name_error!(const_name) unless context
       @dir_paths = each_possible_const(const_name).reduce [] do |new_paths, possible_const|
-        resolved_const = context.resolve_const possible_const, skip: file
+        resolved_const = context.resolve_const possible_const, file
         throw :const, resolved_const if resolved_const
         new_paths << possible_const if possible_namespace?(possible_const)
         new_paths
