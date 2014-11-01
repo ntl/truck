@@ -1,6 +1,4 @@
 module Truck
-  using Truck::StringInflections
-
   class Autoloader
     attr :base_nibbles, :context, :file, :from, :dir_paths
 
@@ -31,7 +29,8 @@ module Truck
     end
 
     def possible_namespace?(possible_const)
-      context.root.join(possible_const.to_snake_case).directory?
+      snaked = StringInflections.to_snake_case possible_const
+      context.root.join(snaked).directory?
     end
 
     def constify(*nibbles)

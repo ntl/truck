@@ -1,6 +1,4 @@
 module Truck
-  using StringInflections
-
   class Context
     class ConstResolver
       attr :current_path, :context, :expanded_const, :skip_files
@@ -25,7 +23,8 @@ module Truck
 
       def each_possible_rb_file
         each_autoload_path do
-          base_path = current_path.join expanded_const.to_snake_case
+          snaked = StringInflections.to_snake_case expanded_const
+          base_path = current_path.join snaked
           each_rb_file_from_base_path base_path do |rb_file|
             next if skip_files.include? rb_file.to_s
             yield rb_file if File.exist?(rb_file)
@@ -79,7 +78,7 @@ module Truck
 
       def expected_const_defined_in_rb_file(rb_file, autoload_path: current_path)
         rel_path = rb_file.sub_ext('').relative_path_from(autoload_path).to_s
-        matcher = %r{\A(#{rel_path.to_camel_case})}i
+        matcher = %r{\A(#{StringInflections.to_camel_case rel_path})}i
         expanded_const.match(matcher).captures.fetch 0
       end
     end
