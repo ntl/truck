@@ -2,14 +2,12 @@ require "bundler"
 Bundler.setup
 
 require "minitest/autorun"
-require "minitest/reporters"
+require "minitest/red_green"
 
 require "fakefs/safe"
 require "ostruct"
 require "pathname"
 require "stringio"
-
-Minitest::Reporters.use! Minitest::Reporters::DefaultReporter.new
 
 require_relative "../lib/truck"
 
