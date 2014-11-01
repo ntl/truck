@@ -3,7 +3,7 @@ module Truck
     class ConstResolver
       attr :current_path, :context, :expanded_const, :skip_files
 
-      def initialize(context:, expanded_const:, skip_files:)
+      def initialize(context, expanded_const, skip_files)
         @context        = context
         @expanded_const = expanded_const
         @skip_files     = skip_files
@@ -71,13 +71,13 @@ module Truck
         expected_const = expected_const_defined_in_rb_file rb_file
         walk_const_parts(expected_const).reduce context.mod do |mod, const_part|
           mod.const_defined?(const_part) or
-            raise AutoloadError.new(const: expected_const, rb_file: rb_file)
+            raise AutoloadError.new(expected_const, rb_file)
           mod.const_get const_part
         end
       end
 
-      def expected_const_defined_in_rb_file(rb_file, autoload_path: current_path)
-        rel_path = rb_file.sub_ext('').relative_path_from(autoload_path).to_s
+      def expected_const_defined_in_rb_file(rb_file)
+        rel_path = rb_file.sub_ext('').relative_path_from(current_path).to_s
         matcher = %r{\A(#{StringInflections.to_camel_case rel_path})}i
         expanded_const.match(matcher).captures.fetch 0
       end

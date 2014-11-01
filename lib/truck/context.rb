@@ -60,11 +60,7 @@ module Truck
     private
 
     def build_const_resolver(expanded_const, skip_files)
-      ConstResolver.new(
-        context: self,
-        expanded_const: String(expanded_const).dup.freeze,
-        skip_files: skip_files,
-      )
+      ConstResolver.new self, String(expanded_const).dup.freeze, skip_files
     end
 
     def build_mod
@@ -84,7 +80,7 @@ module Truck
   class AutoloadError < NameError
     attr :const, :rb_file
 
-    def initialize(const:, rb_file:)
+    def initialize(const, rb_file)
       @const   = const
       @rb_file = rb_file
     end
