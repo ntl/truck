@@ -36,7 +36,7 @@ class AutoloaderTest < Minitest::Test
   end
 
   def test_deeply_nested_module_with_implicit_namespaces
-    %i(C CA CAA).each do |implicit_namespace|
+    [:C, :CA, :CAA].each do |implicit_namespace|
       Truck::Autoloader.handle implicit_namespace, Foo
     end
     const = assert_catches :const do
