@@ -12,8 +12,14 @@ module Truck
 
   attr_accessor :debug_mode
 
-  def define_context(name, **params)
-    contexts[name] = Context.new(name, **params)
+  def define_context(name, params = {})
+    root, parent, autoload_paths = extract_args!(
+      params,
+      :root,
+      parent: nil,
+      autoload_paths: ['.'],
+    )
+    contexts[name] = Context.new(name, root, parent, autoload_paths)
   end
 
   def boot!
@@ -37,6 +43,17 @@ module Truck
   def each_booted_context(&block)
     return to_enum(:each_booted_context) unless block_given?
     contexts.each_value.select(&:booted?).each(&block)
+  end
+
+  def extract_args!(hsh, *mandatory)
+    optional = mandatory.pop if mandatory.last.is_a? Hash
+    args = mandatory.map do |key|
+      hsh.fetch key do raise ArgumentError, "missing keyword: #{key}" end
+    end
+    optional.each do |key, default|
+      args.<< hsh.fetch key, default
+    end
+    args
   end
 end
 

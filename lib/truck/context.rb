@@ -2,7 +2,7 @@ module Truck
   class Context
     attr :autoload_paths, :name, :root
 
-    def initialize(name, parent: nil, root:, autoload_paths: ['.'])
+    def initialize(name, root, parent, autoload_paths)
       @name   = name
       @root   = Pathname(root)
       @parent = parent
