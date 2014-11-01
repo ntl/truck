@@ -73,8 +73,12 @@ module Truck
         autoloaders[current_thread_id]
       end
 
-      def set_current_autoloader(to:)
+      def set_current_autoloader(to)
         autoloaders[current_thread_id] = to
+      end
+
+      def unset_current_autoloader
+        set_current_autoloader nil
       end
 
       def current_thread_id
@@ -91,13 +95,13 @@ module Truck
         throw :const, found_const
       rescue NameError => name_error; raise name_error
       ensure
-        set_current_autoloader(to: nil) if found_const or name_error
+        unset_current_autoloader if found_const or name_error
       end
 
-      def handle!(const_name, current_file: nil, from:)
+      def handle!(const_name, from, current_file = nil)
         autoloader = current_autoloader || new(from, current_file)
         autoloader << String(const_name)
-        set_current_autoloader to: autoloader
+        set_current_autoloader autoloader
       end
     end
     extend HandleConstMissing
@@ -108,7 +112,7 @@ module Truck
       def method_missing(*)
         Autoloader.current_autoloader.raise_name_error!
       ensure
-        Autoloader.set_current_autoloader to: nil
+        Autoloader.unset_current_autoloader
       end
     end
   end
